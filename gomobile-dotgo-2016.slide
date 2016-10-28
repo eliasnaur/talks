@@ -1,4 +1,3 @@
-# Go Mobile: Are we there yet?
 Make mobile programming fun (again)
 dotGo Paris 2016
 
@@ -8,43 +7,19 @@ elias.naur@gmail.com
 
 * What is Go Mobile?
 
-: Hi. I'd like to spend the next few minutes to show you just how much is possible with Go Mobile today. My ulterior motive, of course, is to persuade you to consider Go Mobile for your next, or even your current, mobile project
 
 Go runs on the mobile devices, Go Mobile builds on that to make it convenient to use Go from mobile apps.
 
-: Started in 2014 in David Crawshaw as an experimental Google project.
-
-: There is also support for all-Go apps such as games that need very little interaction with the platform APIs. This talk is about gomobile bind that enables tight integration with the platform APIs.
-
-: Go can compile and build executables for both Android and iOS on x86, arm, arm64.
-
 In particular, Java and Objective C code generation based off your Go packages.
 
-: Also useable from Swift.
-
-#- Automatic reference tracking.
 
 * Why Go Mobile?
 
 It's Go!
 
-: So, why use Gomobile at all? I think the basic premise is both obvious and probably shared by most of us in here: You get to use Go, unrestricted and in the same way as you know it from desktop or backend programs.
-: It's also the one feature gomobile has that Xamarin, Cordova, React Native and so on don't have.
-
 Write (some of it) once.
 
-: The second reason is important if you're writing an app that need to work on both Android an iOS. In fact, if your app starts out on one platform and there's even a remote possibility that you'll need to port it to the other, gomobile might be a very good fit for you.
-
-: Not having to write your application logic twice for Android and iOS is both a relief, a way to increase reliability and to reduce the time and/or costs to develop you app. The most extreme examples are bitcoin wallet app. They have very complicated decentralised logic embedded, and many apps only exist for one platform. If they exist on both, one version quite often lags behind the main paltform.
-
-: If you need to interface Go code directly from you app, and not rewrite it (again, twice!) after writing the backend Go version, use gomobile.
-
-: Go Mobile is not a framework, you can use Go as little or as much as you like.
-
 * Generating bindings
-
-: Let's go through the steps to go from a working Go installion to a running app.
-: With gomobile, I recommend Go 1.7.1 or better. Many small fixes and improvements have gone into Go 1.7 for Android and iOS.
 
 * Setup
 
@@ -56,8 +31,6 @@ Then, initialize it:
 
  gomobile init
 
-: This might take a while, because as part of initializing, `gomobile`init` downloads a stripped down Android SDK.
-
 * Bind your Go package(s)
 
 The `gomobile` `bind` command generates bindings for Go package(s).
@@ -66,24 +39,9 @@ Android:
 
  gomobile bind -target=android github.com/some/package another/package ...
 
-: If you leave out the target, gomobile bind defaults to Android. This command will leave a package.aar in your currenct directory, ready to use.
-
 iOS:
 
  gomobile bind -target=ios github.com/some/package another/package ...
-
-: You'll need to run on macOS and have the XCode Command Lines utilities installed for this to work. Android will work on linux, macOS and Windows.
-: This will generate a Package.framework framework ready to use.
-
-#* Import the bindings
-
-#: So you've generated bindings for your Go package. What now?
-
-#For Android, use the Go Mobile gradle plugin to automate `gomobile`bind`.
-
-#On iOS, import the generated framework in your XCode project once and use `gomobile`bind` to update it.
-
-#There is a complete example for both Android and iOS in the golang.org/x/mobile/example/bind package.
 
 * Using bindings
 
@@ -101,16 +59,11 @@ Java
 
  Pkg.f("Hi!");
 
-: Notice the lower case name and go mobile generated a package class to contains all the global functions, constants and variables.
-: The Java package name can be customized. The default is "go" prefixed to the Go package name.
-
 Objective C
 
  @import pkg;
 
  GoPkgF(@"Hi!");
-
-: Apart from the ObjC import statement, this is very similar to what Cgo would give you.
 
 * Constants and variables
 
@@ -118,21 +71,16 @@ Go
 
  const FourtyTwo = 42
  var Var string
-# type S struct {
-#     Field float32
-# }
 
 Java
 
  long i = Pkg.FourtyTwo;
  Pkg.setVar("Set from Java");
-# float32 f = s.getField();
 
 Objective C
 
  long i = GoPkgFourtyTwo;
  GoPkg.var = "Set from Objective C";
-# float f = [s field];
 
 * Structs
 
@@ -181,11 +129,9 @@ Objective C
  id<GoPkgI> anI = GoPkgGimmeAnI();
  [anI f];
 
-: The returned instance of S is in fact a Java or ObjC class that proxies the underlying Go instance. Go Mobile takes care of forwarding calls to the proxy instance. It also makes sure to keep track og all references to to the instance so that Go won't garbage collect it while using it from your app.
 
 * Implementing interfaces
 
-: The other way is also possible
 
 Go
 
@@ -232,13 +178,10 @@ Objective C
  BOOL success = GoPkgF(&error)
 
 
-: This is very useful for implementing callbacks from Go to Java or Objective C code.
 
-: Go Mobile takes care of keeping a reference to the callback objects for as long as they're referenced from Go.
 
 * Go Mobile UI
 
-: That's all well and good, but what about the rest of the app? That's still a bunch of Java or Objective C, or even Swift, right?
 
 * Using callbacks
 
@@ -407,9 +350,7 @@ Go
 
 - Still experimental. Changes happen.
 - Go binaries still somewhat large.
-: Grows slowly after initial cost. Compresses well.
 - Reference cycles.
-: Known to iOS users, kind of a bummer for Android users.
 
 * Summary
 
